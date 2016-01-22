@@ -1,9 +1,9 @@
-# Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-gulp-webapp.svg?branch=master)](http://travis-ci.org/yeoman/generator-gulp-webapp)
+# generator-custom
+<!-- # Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-gulp-webapp.svg?branch=master)](http://travis-ci.org/yeoman/generator-gulp-webapp) -->
 
 > [Yeoman](http://yeoman.io) generator that scaffolds out a front-end web app using [gulp](http://gulpjs.com/) for the build process
 
-![](screenshot.png)
-
+<!-- ![](screenshot.png) -->
 
 ## Features
 
@@ -30,9 +30,11 @@ If your favorite feature is missing and you really need Ruby Sass, you can alway
 
 ## Getting Started
 
-- Install dependencies: `npm install --global yo gulp bower`
-- Install the generator: `npm install --global generator-gulp-webapp`
-- Run `yo gulp-webapp` to scaffold your webapp
+- Clone repository
+<!-- - Install the generator: `npm install --global generator-gulp-webapp` -->
+- Install dependencies with `npm install`
+- Run `npm link` on repo folder
+- Run `yo custom2` to scaffold your webapp
 - Run `gulp serve` to preview and watch for changes
 - Run `bower install --save <package>` to install frontend dependencies
 - Run `gulp serve:test` to run the tests in the browser

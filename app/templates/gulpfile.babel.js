@@ -8,15 +8,18 @@ import {stream as wiredep} from 'wiredep';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-gulp.task('styles', () => {<% if (includeSass) { %>
-  return gulp.src('app/styles/*.scss')
+gulp.task('styles', () => {<% if (includeSassWithCompass) { %>
+  return gulp.src(['app/styles/**/*.{sass,scss}', '!app/styles/**/_*.*'])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
-    .pipe($.sass.sync({
-      outputStyle: 'expanded',
-      precision: 10,
-      includePaths: ['.']
-    }).on('error', $.sass.logError))<% } else { %>
+    .pipe($.compass({
+      config_file: './compass-dist.rb',
+      sass: 'app/styles',
+      css: 'dist/styles'
+    }).on('error', function(error) {
+      console.log(error);
+      this.emit('end');
+    }))<% } else { %>
   return gulp.src('app/styles/*.css')
     .pipe($.sourcemaps.init())<% } %>
     .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
@@ -124,6 +127,7 @@ gulp.task('serve', ['styles', 'fonts'], () => {
 
   gulp.watch([
     'app/*.html',
+    'app/styles/**/*.<%= includeSassWithCompass ? '{sass,scss}' : 'css' %>',
 <% if (includeBabel) { -%>
     '.tmp/scripts/**/*.js',
 <% } else { -%>
@@ -133,7 +137,7 @@ gulp.task('serve', ['styles', 'fonts'], () => {
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
-  gulp.watch('app/styles/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
+  gulp.watch('app/styles/**/*.<%= includeSassWithCompass ? '{sass,scss}' : 'css' %>', ['styles']);
 <% if (includeBabel) { -%>
   gulp.watch('app/scripts/**/*.js', ['scripts']);
 <% } -%>
@@ -181,18 +185,19 @@ gulp.task('serve:test', () => {
 });
 
 // inject bower components
-gulp.task('wiredep', () => {<% if (includeSass) { %>
-  gulp.src('app/styles/*.scss')
+gulp.task('wiredep', () => {<% if (includeSassWithCompass) { %>
+  gulp.src('app/styles/**/*.{sass,scss}')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)+/
     }))
     .pipe(gulp.dest('app/styles'));
 <% } %>
   gulp.src('app/*.html')
-    .pipe(wiredep({<% if (includeBootstrap) { if (includeSass) { %>
+    .pipe(wiredep({<% if (includeBootstrap) { if (includeSassWithCompass) { %>
       exclude: ['bootstrap-sass'],<% } else { %>
       exclude: ['bootstrap.js'],<% }} %>
-      ignorePath: /^(\.\.\/)*\.\./
+      ignorePath: /^(\.\.\/)*\.\./,
+      exclude: [ '/jquery/', 'bower_components/modernizr/modernizr.js' ]
     }))
     .pipe(gulp.dest('app'));
 });

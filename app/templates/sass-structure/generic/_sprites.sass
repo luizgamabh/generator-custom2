@@ -1,0 +1,31 @@
+//------------------------------------*\
+//    #TRICKS
+//------------------------------------*/
+
+//
+// Manual load sprites
+//
+// Example:
+// $icons: sprite-map("icons/*.png", $spacing: 300px, $layout: horizontal)
+//
+// Uncomment bellow:
+//
+//$icons: sprite-map("icons/*.png", $layout: smart)
+//.sprite
+//  background: $icons
+//  overflow: hidden
+//  text-indent: -9999px
+//@each $i in sprite_names($icons)
+//  .sprite-#{$i}
+//    background-position: sprite-position($icons, $i)
+//    +sprite-dimensions($icons, $i)
+//    &.va, &.ha
+//      position: absolute
+//    &.fva, &.fha
+//      position: fixed
+//    &.va, &.fva
+//      top: 50%
+//      margin-top: -(image-height(sprite-file($icons, $i)) / 2)
+//    &.ha, &.fha
+//      left: 50%
+//      margin-left: -(image-width(sprite-file($icons, $i)) / 2)

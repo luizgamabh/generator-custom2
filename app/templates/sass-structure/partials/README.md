@@ -1,0 +1,3 @@
+# partials
+
+- Page specific classes

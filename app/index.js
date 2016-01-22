@@ -57,7 +57,7 @@ module.exports = generators.Base.extend({
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
-      this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile to build your app.'));
+      this.log(yosay('Be welcome to Custom Generator v2.'));
     }
 
     var prompts = [{
@@ -65,16 +65,32 @@ module.exports = generators.Base.extend({
       name: 'features',
       message: 'What more would you like?',
       choices: [{
-        name: 'Sass',
-        value: 'includeSass',
+        name: 'Sass with Compass',
+        value: 'includeSassWithCompass',
         checked: true
       }, {
         name: 'Bootstrap',
         value: 'includeBootstrap',
-        checked: true
+        checked: false
       }, {
         name: 'Modernizr',
         value: 'includeModernizr',
+        checked: true
+      }, {
+        name: 'Custom Grid System',
+        value: 'includeCustomGS',
+        checked: true
+      }, {
+        name: 'Perfect Scrollbar',
+        value: 'includePerfectScrollbar',
+        checked: true
+      }, {
+        name: 'CSS Reset',
+        value: 'includeCSSReset',
+        checked: true
+      }, {
+        name: 'IncludeMedia (SASS Breakpoints manager)',
+        value: 'includeIncludeMedia',
         checked: true
       }]
     }, {
@@ -85,28 +101,76 @@ module.exports = generators.Base.extend({
       when: function (answers) {
         return answers.features.indexOf('includeBootstrap') === -1;
       }
+    }, {
+      type: 'checkbox',
+      name: 'plugins',
+      message: 'What jQuery plugins would you like?',
+      when: function (answers) {
+        return answers.includeJQuery;
+      },
+      choices: [{
+        name: 'jQuery Easing',
+        value: 'includeJQueryEasing',
+        checked: true
+      }, {
+        name: 'jQuery Smooth Scrollbars (2 plugins)',
+        value: 'includeSmoothScroll',
+        checked: false
+      }, {
+        name: 'jQuery Hotkeys',
+        value: 'includeJQueryHotkeys',
+        checked: false
+      }, {
+        name: 'jQuery Advanced Break',
+        value: 'includeJQueryAdvancedBreak',
+        checked: false
+      }, {
+        name: 'jQuery Advanced Scroll',
+        value: 'includeJQueryAdvancedScroll',
+        checked: false
+      }]
     }];
 
     this.prompt(prompts, function (answers) {
       var features = answers.features;
+      var plugins = answers.plugins;
 
       function hasFeature(feat) {
         return features && features.indexOf(feat) !== -1;
       };
 
+      function hasPlugin(plug) {
+        return plugins && plugins.indexOf(plug) !== -1;
+      }
+
       // manually deal with the response, get back and store the results.
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
-      this.includeSass = hasFeature('includeSass');
+      this.includeSassWithCompass = hasFeature('includeSassWithCompass');
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
+      this.includeCustomGS = hasFeature('includeCustomGS');
+      this.includePerfectScrollbar = hasFeature('includePerfectScrollbar');
       this.includeJQuery = answers.includeJQuery;
+      this.includeCSSReset = hasFeature('includeCSSReset');
+      this.includeIncludeMedia = hasFeature('includeIncludeMedia');
+      this.includeJQueryEasing = hasPlugin('includeJQueryEasing');
+      this.includeSmoothScroll = hasPlugin('includeSmoothScroll');
+      this.includeJQueryHotkeys = hasPlugin('includeJQueryHotkeys');
+      this.includeJQueryAdvancedBreak = hasPlugin('includeJQueryAdvancedBreak');
+      this.includeJQueryAdvancedScroll = hasPlugin('includeJQueryAdvancedScroll');
 
       done();
     }.bind(this));
   },
 
   writing: {
+    compass: function() {
+      this.fs.copy(this.templatePath('compass-dev.rb'), this.destinationPath('compass-dev.rb'));
+      this.fs.copy(this.templatePath('compass-dist.rb'), this.destinationPath('compass-dist.rb'));
+    },
+
     gulpfile: function () {
+      this.bower_directory = './bower_components';
       this.fs.copyTpl(
         this.templatePath('gulpfile.babel.js'),
         this.destinationPath('gulpfile.babel.js'),
@@ -114,8 +178,17 @@ module.exports = generators.Base.extend({
           date: (new Date).toISOString().split('T')[0],
           name: this.pkg.name,
           version: this.pkg.version,
-          includeSass: this.includeSass,
+          bower_directory: this.bower_directory,
+          includeSassWithCompass: this.includeSassWithCompass,
           includeBootstrap: this.includeBootstrap,
+          includeModernizr: this.includeModernizr,
+          includePerfectScrollbar: this.includePerfectScrollbar,
+          includeJQuery: this.includeJQuery,
+          includeJQueryEasing: this.includeJQueryEasing,
+          includeSmoothScroll: this.includeSmoothScroll,
+          includeJQueryHotkeys: this.includeJQueryHotkeys,
+          includeJQueryAdvancedBreak: this.includeJQueryAdvancedBreak,
+          includeJQueryAdvancedScroll: this.includeJQueryAdvancedScroll,
           includeBabel: this.options['babel'],
           testFramework: this.options['test-framework']
         }
@@ -127,7 +200,7 @@ module.exports = generators.Base.extend({
         this.templatePath('_package.json'),
         this.destinationPath('package.json'),
         {
-          includeSass: this.includeSass,
+          includeSassWithCompass: this.includeSassWithCompass,
           includeBabel: this.options['babel']
         }
       );
@@ -150,6 +223,11 @@ module.exports = generators.Base.extend({
         this.destinationPath('.gitattributes'));
     },
 
+    console: function() {
+      console.log(this.includeJQuery);
+      console.log(this.includeJQueryAdvancedBreak);
+    },
+
     bower: function () {
       var bowerJson = {
         name: _s.slugify(this.appname),
@@ -158,7 +236,7 @@ module.exports = generators.Base.extend({
       };
 
       if (this.includeBootstrap) {
-        if (this.includeSass) {
+        if (this.includeSassWithCompass) {
           bowerJson.dependencies['bootstrap-sass'] = '~3.3.5';
           bowerJson.overrides = {
             'bootstrap-sass': {
@@ -183,12 +261,46 @@ module.exports = generators.Base.extend({
           };
         }
       } else if (this.includeJQuery) {
-        bowerJson.dependencies['jquery'] = '~2.1.1';
+        bowerJson.dependencies['jquery'] = '~2.1.4';
       }
 
       if (this.includeModernizr) {
         bowerJson.dependencies['modernizr'] = '~2.8.1';
       }
+
+      if (this.includeCustomGS) {
+        bowerJson.dependencies['custom.gs'] = '~2.3.0';
+      }
+
+      if (this.includePerfectScrollbar) {
+        bowerJson.dependencies['perfect-scrollbar'] = '~0.6.8';
+      }
+
+      if (this.includeIncludeMedia) {
+        bowerJson.dependencies['include-media'] = '~1.4.2';
+      }
+
+      if (this.includeJQueryEasing) {
+        bowerJson.dependencies['jquery-easing-original'] = '~1.3.2';
+      }
+
+      if (this.includeSmoothScroll) {
+        bowerJson.dependencies['jquery-mousewheel'] = '~3.1.13';
+        bowerJson.dependencies['jquery_nicescroll'] = 'luizgamabh/nicescroll#~0.9.9';
+      }
+
+      if (this.includeJQueryHotkeys) {
+        bowerJson.dependencies['jquery.hotkeys'] = 'jeresig/jquery.hotkeys#~0.2.0';
+      }
+
+      if (this.includeJQueryAdvancedBreak) {
+        bowerJson.dependencies['jquery.advancedbreak'] = 'luizgamabh/jquery.advancedbreak#~0.0.1';
+      }
+
+      if (this.includeJQueryAdvancedScroll) {
+        bowerJson.dependencies['jquery.advancedScroll'] = 'luizgamabh/jquery.advancedScroll#~0.0.1';
+      }
+
 
       this.fs.writeJSON('bower.json', bowerJson);
       this.fs.copy(
@@ -223,17 +335,25 @@ module.exports = generators.Base.extend({
     styles: function () {
       var css = 'main';
 
-      if (this.includeSass) {
-        css += '.scss';
+      if (this.includeSassWithCompass) {
+        this.directory('sass-structure', 'app/styles');
+        css += '.sass';
       } else {
         css += '.css';
       }
+
+      this.bower_directory = '../../bower_components';
 
       this.fs.copyTpl(
         this.templatePath(css),
         this.destinationPath('app/styles/' + css),
         {
-          includeBootstrap: this.includeBootstrap
+          includeBootstrap: this.includeBootstrap,
+          includeCustomGS: this.includeCustomGS,
+          includeCSSReset: this.includeCSSReset,
+          includePerfectScrollbar: this.includePerfectScrollbar,
+          includeIncludeMedia: this.includeIncludeMedia,
+          bower_directory: this.bower_directory
         }
       );
     },
@@ -252,7 +372,7 @@ module.exports = generators.Base.extend({
       if (this.includeBootstrap) {
         bsPath = '/bower_components/';
 
-        if (this.includeSass) {
+        if (this.includeSassWithCompass) {
           bsPath += 'bootstrap-sass/assets/javascripts/bootstrap/';
         } else {
           bsPath += 'bootstrap/js/';
@@ -264,7 +384,7 @@ module.exports = generators.Base.extend({
         this.destinationPath('app/index.html'),
         {
           appname: this.appname,
-          includeSass: this.includeSass,
+          includeSassWithCompass: this.includeSassWithCompass,
           includeBootstrap: this.includeBootstrap,
           includeModernizr: this.includeModernizr,
           includeJQuery: this.includeJQuery,
@@ -304,7 +424,7 @@ module.exports = generators.Base.extend({
     var bowerJson = this.fs.readJSON(this.destinationPath('bower.json'));
     var howToInstall =
       '\nAfter running ' +
-      chalk.yellow.bold('npm install & bower install') +
+      chalk.yellow.bold('bundle install & npm install & bower install') +
       ', inject your' +
       '\nfront end dependencies by running ' +
       chalk.yellow.bold('gulp wiredep') +
@@ -324,7 +444,7 @@ module.exports = generators.Base.extend({
       src: 'app/index.html'
     });
 
-    if (this.includeSass) {
+    if (this.includeSassWithCompass) {
       // wire Bower packages to .scss
       wiredep({
         bowerJson: bowerJson,

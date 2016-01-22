@@ -1,0 +1,49 @@
+//------------------------------------*\
+//    #TRICKS
+//------------------------------------*/
+
+//
+// Makes body full height size
+//
+html, body
+  height: 100%
+
+//
+// Makes transparent Phonegap tap background-color
+//
+html
+  -webkit-tap-highlight-color: rgba(0,0,0,0)
+
+//
+// Solve flickering problem with animations on
+//
+%correct_flickering
+  -webkit-backface-visibility: hidden
+
+//
+// Smooth fonts (font-smoothing)
+// Solves the problem with iOS font changes (text-size-adjust)
+//
+body
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  -webkit-text-size-adjust: none
+
+//
+// Give a help cursor to elements that give extra info on `:hover`.
+//
+abbr[title],dfn[title]
+  cursor: help
+
+//
+// Selection colors
+//
+//noinspection SassScssResolvedByNameOnly
++selection($color-selection-bg, $color-selection-txt)
+
+//
+// Stop iOS from changing font sizes according to viewport
+//
+html
+  -ms-text-size-adjust: 100% /* 2 */
+  -webkit-text-size-adjust: 100% /* 2 */

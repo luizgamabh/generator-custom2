@@ -8,7 +8,7 @@ Options:
     Babel: Use ES2015 features by using Babel
 
 Example:
-    yo gulp-webapp
+    yo custom2
 
     This will create:
         gulpfile.babel.js: Configuration for the task runner.

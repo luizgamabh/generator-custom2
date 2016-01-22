@@ -47,7 +47,7 @@
         <div class="col-lg-6">
           <h4>HTML5 Boilerplate</h4>
           <p>HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.</p>
-          <% if (includeSass) { %>
+          <% if (includeSassWithCompass) { %>
           <h4>Sass</h4>
           <p>Sass is the most mature, stable, and powerful professional grade CSS extension language in the world.</p>
           <% } %>
@@ -68,13 +68,31 @@
       <h1>'Allo, 'Allo!</h1>
       <p>You now have</p>
       <ul>
-        <li>HTML5 Boilerplate</li><% if (includeSass) { %>
+        <li>HTML5 Boilerplate</li><% if (includeSassWithCompass) { %>
         <li>Sass</li><% } if (includeModernizr) { %>
         <li>Modernizr</li><% } if (includeJQuery) { %>
         <li>jQuery</li><% } %>
       </ul>
     </div>
     <% } %>
+
+<% if (includeBootstrap) { %>
+    <!-- build:js scripts/plugins.js -->
+<% bsPlugins.forEach(function (plugin) { -%>
+    <script src="<%= bsPath + plugin %>.js"></script>
+<% }) -%>
+    <!-- endbuild -->
+<% } else if (includeJQuery) { %>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/bower_components/jquery/dist/jquery.min.js"><\/script>')</script>
+<% } %>
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -84,20 +102,6 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
-
-    <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <% if (includeBootstrap) { %>
-    <!-- build:js scripts/plugins.js -->
-<% bsPlugins.forEach(function (plugin) { -%>
-    <script src="<%= bsPath + plugin %>.js"></script>
-<% }) -%>
-    <!-- endbuild -->
-    <% } %>
-    <!-- build:js scripts/main.js -->
-    <script src="scripts/main.js"></script>
     <!-- endbuild -->
   </body>
 </html>

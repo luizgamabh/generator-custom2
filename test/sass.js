@@ -10,7 +10,7 @@ describe('Sass feature', function () {
         .inDir(path.join(__dirname, 'temp'))
         .withOptions({'skip-install': true})
         .withPrompts({features: [
-          'includeSass'
+          'includeSassWithCompass'
         ]})
         .on('end', done);
     });
