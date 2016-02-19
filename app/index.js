@@ -84,6 +84,10 @@ module.exports = generators.Base.extend({
         name: 'Perfect Scrollbar',
         value: 'includePerfectScrollbar',
         checked: true
+      },  {
+        name: 'Font Awesome',
+        value: 'includeFontAwesome',
+        checked: true
       }, {
         name: 'CSS Reset',
         value: 'includeCSSReset',
@@ -150,9 +154,10 @@ module.exports = generators.Base.extend({
       this.includeModernizr = hasFeature('includeModernizr');
       this.includeCustomGS = hasFeature('includeCustomGS');
       this.includePerfectScrollbar = hasFeature('includePerfectScrollbar');
-      this.includeJQuery = answers.includeJQuery;
+      this.includeFontAwesome = hasFeature('includeFontAwesome');
       this.includeCSSReset = hasFeature('includeCSSReset');
       this.includeIncludeMedia = hasFeature('includeIncludeMedia');
+      this.includeJQuery = answers.includeJQuery;
       this.includeJQueryEasing = hasPlugin('includeJQueryEasing');
       this.includeSmoothScroll = hasPlugin('includeSmoothScroll');
       this.includeJQueryHotkeys = hasPlugin('includeJQueryHotkeys');
@@ -183,6 +188,7 @@ module.exports = generators.Base.extend({
           includeBootstrap: this.includeBootstrap,
           includeModernizr: this.includeModernizr,
           includePerfectScrollbar: this.includePerfectScrollbar,
+          includeFontAwesome: this.includeFontAwesome,
           includeJQuery: this.includeJQuery,
           includeJQueryEasing: this.includeJQueryEasing,
           includeSmoothScroll: this.includeSmoothScroll,
@@ -223,41 +229,33 @@ module.exports = generators.Base.extend({
         this.destinationPath('.gitattributes'));
     },
 
-    console: function() {
-      console.log(this.includeJQuery);
-      console.log(this.includeJQueryAdvancedBreak);
-    },
-
     bower: function () {
       var bowerJson = {
         name: _s.slugify(this.appname),
         private: true,
-        dependencies: {}
+        dependencies: {},
+        overrides: {}
       };
 
       if (this.includeBootstrap) {
         if (this.includeSassWithCompass) {
           bowerJson.dependencies['bootstrap-sass'] = '~3.3.5';
-          bowerJson.overrides = {
-            'bootstrap-sass': {
-              'main': [
-                'assets/stylesheets/_bootstrap.scss',
-                'assets/fonts/bootstrap/*',
-                'assets/javascripts/bootstrap.js'
-              ]
-            }
+          bowerJson.overrides['bootstrap-sass'] = {
+            'main': [
+              'assets/stylesheets/_bootstrap.scss',
+              'assets/fonts/bootstrap/*',
+              'assets/javascripts/bootstrap.js'
+            ]
           };
         } else {
           bowerJson.dependencies['bootstrap'] = '~3.3.5';
-          bowerJson.overrides = {
-            'bootstrap': {
-              'main': [
-                'less/bootstrap.less',
-                'dist/css/bootstrap.css',
-                'dist/js/bootstrap.js',
-                'dist/fonts/*'
-              ]
-            }
+          bowerJson.overrides['bootstrap'] = {
+            'main': [
+              'less/bootstrap.less',
+              'dist/css/bootstrap.css',
+              'dist/js/bootstrap.js',
+              'dist/fonts/*'
+            ]
           };
         }
       } else if (this.includeJQuery) {
@@ -266,6 +264,11 @@ module.exports = generators.Base.extend({
 
       if (this.includeModernizr) {
         bowerJson.dependencies['modernizr'] = '~2.8.1';
+        bowerJson.overrides['modernizr'] = {
+          'main': [
+            'modernizr.js'
+          ]
+        }
       }
 
       if (this.includeCustomGS) {
@@ -274,6 +277,35 @@ module.exports = generators.Base.extend({
 
       if (this.includePerfectScrollbar) {
         bowerJson.dependencies['perfect-scrollbar'] = '~0.6.8';
+        var main = [];
+        if (this.includeJQuery) {
+          main.push('js/perfect-scrollbar.jquery.js');
+        } else {
+          main.push('js/perfect-scrollbar.js')
+        }
+        if (this.includeSassWithCompass) {
+          main.push('src/css/main.scss');
+        } else {
+          main.push('css/perfect-scrollbar.min.css');
+        }
+        bowerJson.overrides['perfect-scrollbar'] = {
+          'main': main
+        };
+      }
+
+      if (this.includeFontAwesome) {
+        bowerJson.dependencies['font-awesome'] = 'fontawesome#~4.5.0';
+        bowerJson.overrides['font-awesome'] = {
+          'main': [
+            "scss/font-awesome.scss",
+            "fonts/FontAwesome.otf",
+            "fonts/fontawesome-webfont.eot",
+            "fonts/fontawesome-webfont.svg",
+            "fonts/fontawesome-webfont.ttf",
+            "fonts/fontawesome-webfont.woff",
+            "fonts/fontawesome-webfont.woff2"
+          ]
+        }
       }
 
       if (this.includeIncludeMedia) {
@@ -282,11 +314,21 @@ module.exports = generators.Base.extend({
 
       if (this.includeJQueryEasing) {
         bowerJson.dependencies['jquery-easing-original'] = '~1.3.2';
+        bowerJson.overrides['jquery-easing-original'] = {
+          'main': [
+            'jquery.easing.min.js'
+          ]
+        }
       }
 
       if (this.includeSmoothScroll) {
         bowerJson.dependencies['jquery-mousewheel'] = '~3.1.13';
         bowerJson.dependencies['jquery_nicescroll'] = 'luizgamabh/nicescroll#~0.9.9';
+        bowerJson.overrides['jquery_nicescroll'] = {
+          'main': [
+            'nicescroll.js'
+          ]
+        }
       }
 
       if (this.includeJQueryHotkeys) {
@@ -295,6 +337,11 @@ module.exports = generators.Base.extend({
 
       if (this.includeJQueryAdvancedBreak) {
         bowerJson.dependencies['jquery.advancedbreak'] = 'luizgamabh/jquery.advancedbreak#~0.0.1';
+        bowerJson.overrides['jquery.advancedbreak'] = {
+          'main': [
+            'jquery.advancedBreak.js'
+          ]
+        }
       }
 
       if (this.includeJQueryAdvancedScroll) {
@@ -353,6 +400,7 @@ module.exports = generators.Base.extend({
           includeCSSReset: this.includeCSSReset,
           includePerfectScrollbar: this.includePerfectScrollbar,
           includeIncludeMedia: this.includeIncludeMedia,
+          includeFontAwesome: this.includeFontAwesome,
           bower_directory: this.bower_directory
         }
       );
