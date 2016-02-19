@@ -170,8 +170,7 @@ module.exports = generators.Base.extend({
 
   writing: {
     compass: function() {
-      this.fs.copy(this.templatePath('compass-dev.rb'), this.destinationPath('compass-dev.rb'));
-      this.fs.copy(this.templatePath('compass-dist.rb'), this.destinationPath('compass-dist.rb'));
+      this.fs.copy(this.templatePath('config.rb'), this.destinationPath('config.rb'));
     },
 
     gulpfile: function () {
