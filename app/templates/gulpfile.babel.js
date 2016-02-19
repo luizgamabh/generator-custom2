@@ -13,7 +13,7 @@ gulp.task('styles', () => {<% if (includeSassWithCompass) { %>
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.compass({
-      config_file: './compass-dist.rb',
+      config_file: './config.rb',
       sass: 'app/styles',
       css: 'dist/styles'
     }).on('error', function(error) {
