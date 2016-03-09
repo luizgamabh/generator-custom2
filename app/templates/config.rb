@@ -1,7 +1,7 @@
 # http_path = "/"
 css_dir = "./dist/styles/"
 sass_dir = "./app/styles/"
-images_dir = "./app/images/"
+images_dir = "./images/"
 # images_path = "./dist/assets/img/"
 # http_images_dir = "./dist/assets/img/"
 # sprite_load_path = "./resources/sprite/"

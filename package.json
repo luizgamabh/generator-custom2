@@ -1,6 +1,6 @@
 {
   "name": "generator-custom2",
-  "version": "2.0.0",
+  "version": "1.0.8",
   "description": "Scaffold out a front-end web app",
   "license": "BSD-2-Clause",
   "repository": "yeoman/generator-gulp-webapp",
