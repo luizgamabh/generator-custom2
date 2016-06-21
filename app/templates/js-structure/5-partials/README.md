@@ -1,0 +1,1 @@
+Eg.: Singular page scripts

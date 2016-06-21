@@ -407,6 +407,7 @@ module.exports = generators.Base.extend({
     },
 
     scripts: function () {
+      this.directory('js-structure', 'app/scripts');
       this.fs.copy(
         this.templatePath('main.js'),
         this.destinationPath('app/scripts/main.js')
