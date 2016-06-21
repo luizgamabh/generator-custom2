@@ -1,10 +1,10 @@
 # http_path = "/"
-css_dir = "dist/styles/"
-sass_dir = "app/styles/"
-images_dir = "app/images/"
-images_path = "images/"
-fonts_dir = "dist/fonts/"
+css_dir = "./dist/styles/"
+sass_dir = "./app/styles/"
+images_dir = "./app/images/"
+fonts_dir = "./dist/fonts/"
 javascripts_dir = "./dist/scripts/"
+# images_path = "images/"
 # http_images_dir = "./dist/assets/img/"
 # sprite_load_path = "./resources/sprite/"
 
@@ -13,7 +13,7 @@ javascripts_dir = "./dist/scripts/"
 output_style = :compressed
 
 # To enable relative paths to assets via compass helper functions. Uncomment:
-relative_assets = false
+relative_assets = true
 
 # To disable debugging comments that display the original location of your selectors. Uncomment:
 line_comments = false

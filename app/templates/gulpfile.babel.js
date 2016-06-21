@@ -8,29 +8,35 @@ import {stream as wiredep} from 'wiredep';
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-gulp.task('styles', () => {<% if (includeSassWithCompass) { %>
+var styles_func = function(dist) {<% if (includeSassWithCompass) { %>
+  dist = dist || false;
+  var cf = './config'+(dist?'-dist':'')+'.rb';
   return gulp.src(['app/styles/**/*.{sass,scss}', '!app/styles/**/_*.*'])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.compass({
-      config_file: './config.rb',
+      config_file: cf,
       sass: 'app/styles',
       css: 'dist/styles'
-    }).on('error', function(error) {
+    }).on('error', function (error) {
       console.log(error);
       this.emit('end');
     }))<% } else { %>
-  return gulp.src('app/styles/*.css')
+    return gulp.src('app/styles/*.css')
     .pipe($.sourcemaps.init())<% } %>
     .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/styles'))
     .pipe(reload({stream: true}));
-});
+};
+
+gulp.task('styles', () => styles_func());
+
+gulp.task('styles:dist', () => styles_func(true));
 
 <% if (includeBabel) { -%>
 gulp.task('scripts', () => {
-  return gulp.src('app/scripts/**/*.js')
+  return gulp.src(['app/scripts/**/*.js', 'app/scripts/main.js', 'app/scripts/app.js'])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.babel())
@@ -63,15 +69,26 @@ gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
 <% if (includeBabel) { -%>
-gulp.task('html', ['styles', 'scripts'], () => {
+gulp.task('html', ['styles:dist', 'scripts'], () => {
 <% } else { -%>
 gulp.task('html', ['styles'], () => {
 <% } -%>
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
-    .pipe($.if('*.js', $.uglify()))
-    .pipe($.if('*.css', $.cssnano()))
-    .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
+    .pipe($.if('*.js', $.uglify({
+      mangle: true,
+      compress: true
+    })))
+    .pipe($.if('*.css', $.cssnano({
+      mergeIdents: false,
+      reduceIdents: false
+    })))
+    .pipe($.if('*.html', $.htmlmin({
+      collapseWhitespace: false,
+      removeComments: true,
+      removeAttributeQuotes: false,
+      removeRedundantAttributes: true
+    })))
     .pipe(gulp.dest('dist'));
 });
 
@@ -116,7 +133,8 @@ gulp.task('serve', ['styles', 'fonts'], () => {
 <% } -%>
   browserSync({
     notify: false,
-    port: 9000,
+    online: false,
+    port: 9876,
     server: {
       baseDir: ['.tmp', 'app'],
       routes: {
@@ -140,6 +158,12 @@ gulp.task('serve', ['styles', 'fonts'], () => {
   gulp.watch('app/styles/**/*.<%= includeSassWithCompass ? '{sass,scss}' : 'css' %>', ['styles']);
 <% if (includeBabel) { -%>
   gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/scripts/**/*.js', function(event) {
+    // Fires wiredep when a new script is added
+    if (event.type === 'added') {
+      gulp.start('wiredep');
+    }
+  });
 <% } -%>
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
@@ -185,20 +209,26 @@ gulp.task('serve:test', () => {
 });
 
 // inject bower components
-gulp.task('wiredep', () => {<% if (includeSassWithCompass) { %>
+gulp.task('wiredep', ['styles', 'scripts', 'fonts'], () => {<% if (includeSassWithCompass) { %>
   gulp.src('app/styles/**/*.{sass,scss}')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)+/
     }))
     .pipe(gulp.dest('app/styles'));
 <% } %>
+  var injectSources = gulp.src(['.tmp/scripts/*/*.js', '.tmp/scripts/main.js', '.tmp/scripts/app.js', '.tmp/styles/**/*.css'], {read: false}),
+      injectOptions = {
+      ignorePath: ['/.tmp'],
+      addRootSlash: false
+    };
   gulp.src('app/*.html')
     .pipe(wiredep({<% if (includeBootstrap) { if (includeSassWithCompass) { %>
       exclude: ['bootstrap-sass'],<% } else { %>
       exclude: ['bootstrap.js'],<% }} %>
       ignorePath: /^(\.\.\/)*\.\./,
-      exclude: [ '/jquery/', 'bower_components/modernizr/modernizr.js' ]
+      exclude: [ '/jquery/', '/angular/', 'bower_components/modernizr/modernizr.js' ]
     }))
+    .pipe($.inject(injectSources, injectOptions))
     .pipe(gulp.dest('app'));
 });
 
