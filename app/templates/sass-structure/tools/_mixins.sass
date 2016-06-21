@@ -6,29 +6,29 @@
 // Aditional mixins
 //
 =pointer-events($type: none)
-    $type: unquote($type)
-    +experimental(pointer-events, $type, -moz, -webkit, not -o, not -ms, -khtml, official)
+  $type: unquote($type)
+  +experimental(pointer-events, $type, -moz, -webkit, not -o, not -ms, -khtml, official)
 
 =touch-callout($type: none)
-    $type: unquote($type)
-    +experimental(touch-callout, $type, not -moz, -webkit, not -o, not -ms, not -khtml, official)
+  $type: unquote($type)
+  +experimental(touch-callout, $type, not -moz, -webkit, not -o, not -ms, not -khtml, official)
 
 =user-select($select)
-    $select: unquote($select)
-    +experimental(user-select, $select, -moz, -webkit, not -o, not -ms, -khtml, official)
+  $select: unquote($select)
+  +experimental(user-select, $select, -moz, -webkit, not -o, not -ms, -khtml, official)
 
 =selection($color_bg, $color_txt)
-    ::-moz-selection
-        background: $color_bg
-        color: $color_txt
-        text-shadow: none
-    ::selection
-        background: $color_bg
-        color: $color_txt
-        text-shadow: none
+  ::-moz-selection
+    background: $color_bg
+    color: $color_txt
+    text-shadow: none
+  ::selection
+    background: $color_bg
+    color: $color_txt
+    text-shadow: none
 
 =truncate($width: 100%)
-	width: $width
-	white-space: nowrap
-	overflow: hidden
-	text-overflow: ellipsis
+  width: $width
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis

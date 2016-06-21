@@ -9,14 +9,15 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
 
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:css styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
     <% if (includeModernizr) { %>
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="/bower_components/modernizr/modernizr.js"></script>
@@ -92,14 +93,18 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js scripts/main.js -->
+    <!-- inject:js -->
     <script src="scripts/main.js"></script>
+    <!-- endinject -->
+    <!-- Place inline scripts here -->
+
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='https://www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      (function(c,u,s,t,o,m){c.GoogleAnalyticsObject=t;c[t]||(c[t]=
+      function(){(c[t].q=c[t].q||[]).push(arguments)});c[t].l=+new Date;
+      o=u.createElement(s);m=u.getElementsByTagName(s)[0];
+      o.src='https://www.google-analytics.com/analytics.js';
+      m.parentNode.insertBefore(o,m)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
     <!-- endbuild -->

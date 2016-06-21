@@ -174,7 +174,7 @@ module.exports = generators.Base.extend({
       this.fs.copy(this.templatePath('config-dist.rb'), this.destinationPath('config-dist.rb'));
     },
 
-    gulpfile: function () {c
+    gulpfile: function () {
       this.bower_directory = './bower_components';
       this.fs.copyTpl(
         this.templatePath('gulpfile.babel.js'),
