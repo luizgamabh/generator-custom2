@@ -271,7 +271,7 @@ module.exports = generators.Base.extend({
       }
 
       if (this.includeCustomGS) {
-        bowerJson.dependencies['custom.gs'] = '~5.0.1';
+        bowerJson.dependencies['custom.gs'] = '~5.0';
       }
 
       if (this.includePerfectScrollbar) {
