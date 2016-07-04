@@ -10,12 +10,13 @@ const reload = browserSync.reload;
 
 var styles_func = function(dist) {<% if (includeSassWithCompass) { %>
   dist = dist || false;
-  var cf = './config'+(dist?'-dist':'')+'.rb';
+  var cf = './config.rb';
   return gulp.src(['app/styles/**/*.{sass,scss}', '!app/styles/**/_*.*'])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.compass({
       config_file: cf,
+      relative: false,
       sass: 'app/styles',
       css: 'dist/styles'
     }).on('error', function (error) {
@@ -156,6 +157,10 @@ gulp.task('serve', ['styles', 'fonts'], () => {
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.<%= includeSassWithCompass ? '{sass,scss}' : 'css' %>', ['styles']);
+  gulp.watch(['gulpfile.babel.js', 'config.rb']).on('change', function(event) {
+    reload();
+    gulp.start('styles');
+  });
 <% if (includeBabel) { -%>
   gulp.watch('app/scripts/**/*.js', ['scripts']);
   gulp.watch('app/scripts/**/*.js', function(event) {
@@ -201,6 +206,7 @@ gulp.task('serve:test', () => {
     }
   });
 
+  gulp.watch(['gulpfile.babel.js', 'config.rb']).on('change', reload);
 <% if (includeBabel) { -%>
   gulp.watch('app/scripts/**/*.js', ['scripts']);
 <% } -%>

@@ -171,7 +171,6 @@ module.exports = generators.Base.extend({
   writing: {
     compass: function() {
       this.fs.copy(this.templatePath('config.rb'), this.destinationPath('config.rb'));
-      this.fs.copy(this.templatePath('config-dist.rb'), this.destinationPath('config-dist.rb'));
     },
 
     gulpfile: function () {
@@ -272,7 +271,7 @@ module.exports = generators.Base.extend({
       }
 
       if (this.includeCustomGS) {
-        bowerJson.dependencies['custom.gs'] = '~2.3.3';
+        bowerJson.dependencies['custom.gs'] = '~5.0.1';
       }
 
       if (this.includePerfectScrollbar) {

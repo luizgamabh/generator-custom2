@@ -1,19 +1,31 @@
+relative_assets = false
+
+# Root
+# project_type = :stand_alone
 # http_path = "/"
+# project_path = "/"
+
+# CSS and Sass
 css_dir = "dist/styles/"
 sass_dir = "app/styles/"
-images_dir = "app/images/"
-images_path = "images/"
+
+# Images
+http_images_path = "../images" # Default: http_path + "/" + images_dir
+# images_dir = "app/images"
+images_path = "app/images" # Default: <project_path>/<images_dir>
+# generated_images_dir = images_dir
+
+# Fonts
 fonts_dir = "dist/fonts/"
+
+# JavaScript
 javascripts_dir = "./dist/scripts/"
-# http_images_dir = "./dist/assets/img/"
+
+# Sprites
 # sprite_load_path = "./resources/sprite/"
 
-# You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
 output_style = :compressed
-
-# To enable relative paths to assets via compass helper functions. Uncomment:
-relative_assets = false
 
 # To disable debugging comments that display the original location of your selectors. Uncomment:
 line_comments = false
