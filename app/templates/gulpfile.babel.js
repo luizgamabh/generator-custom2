@@ -7,6 +7,7 @@ import {stream as wiredep} from 'wiredep';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
+// const gutil = require('gulp-util');
 
 var styles_func = function(dist) {<% if (includeSassWithCompass) { %>
   dist = dist || false;
